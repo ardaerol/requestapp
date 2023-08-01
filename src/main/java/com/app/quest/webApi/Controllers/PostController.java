@@ -3,7 +3,9 @@ package com.app.quest.webApi.Controllers;
 import com.app.quest.Business.abstracts.PostService;
 import com.app.quest.Business.requests.PostCreateRequest;
 import com.app.quest.Business.requests.PostUpdateRequest;
+import com.app.quest.Business.responses.PostResponse;
 import com.app.quest.entities.Post;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,17 +14,18 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
+@AllArgsConstructor
 public class PostController {
     @Autowired
     private PostService postService;
 
     @GetMapping
-    public List<Post> getAllPosts(@RequestParam Optional<Long> userId) {
+    public List<PostResponse> getAllPosts(@RequestParam Optional<Long> userId) {
         return postService.getAllPosts(userId);
     }
 
     @GetMapping("/{postId}")
-    public Post getPostById(@RequestParam Long postId) {
+    public PostResponse getPostById(@RequestParam Long postId) {
         return postService.getPostById(postId);
     }
 

@@ -4,6 +4,7 @@ import com.app.quest.Business.abstracts.PostService;
 import com.app.quest.Business.abstracts.UserService;
 import com.app.quest.Business.requests.PostCreateRequest;
 import com.app.quest.Business.requests.PostUpdateRequest;
+import com.app.quest.Business.responses.PostResponse;
 import com.app.quest.dataAcess.abstracts.PostRepository;
 import com.app.quest.entities.Post;
 import com.app.quest.entities.User;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,19 +22,22 @@ public class PostManager implements PostService {
     private UserService userService;
 
     @Override
-    public List<Post> getAllPosts(Optional<Long> userId) {
+    public List<PostResponse> getAllPosts(Optional<Long> userId) {
+        List<Post> posts;
         if (userId.isPresent()) {
-            return postRepository.findByUserId(userId.get());
+            posts = postRepository.findByUserId(userId.get());
 
         }else {
-            return postRepository.findAll();
+           posts =  postRepository.findAll();
         }
+        return posts.stream().map(post -> new PostResponse(post)).collect(Collectors.toList());
 
     }
 
     @Override
-    public Post getPostById(Long postId) {
-        return postRepository.findById(postId).orElseThrow();
+    public PostResponse getPostById(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        return new PostResponse(post);
     }
 
     @Override
